@@ -22,12 +22,13 @@ def see(progname, progvars, symbOuts) :
         print("No Violations Found")
 
 def print_true_vars(progname, progvars, m) :
+    varnames = [str(var) for var in progvars]
+    varsset = set(varnames)
     varsdict = {}
-    varnames = set([str(var) for var in progvars])
     for d in m.decls():
         if d.name() in varnames:
             varsdict[d.name()] = m[d]
-    print(progname, join_unchange([varsdict[v] for v in varnames]))
+    print(progname, join_unchange([varsdict[v] if v in varsdict else -1 for v in varnames]))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
