@@ -1,0 +1,10 @@
+program swap(x y)
+    pre x >= 0
+is
+    z := 5;
+    while z > 0 do
+        x, y := x, y;
+        z := z - 1;
+    end
+    assert x != y;
+end

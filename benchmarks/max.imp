@@ -1,0 +1,13 @@
+program max(a n)
+    pre n > 0
+is
+    maxi := 0;
+    while n >= 0 do
+        if a[n] > maxi
+        then
+            maxi := a[n];
+        end
+        n := n - 1;
+    end
+    assert forall i, i <= n ==> a[i] <= maxi;
+end
