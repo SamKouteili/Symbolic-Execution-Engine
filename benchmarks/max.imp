@@ -2,7 +2,7 @@ program max(a n)
     pre n > 0
 is
     maxi := 0;
-    while n >= 0 do
+    while n > 0 do
         if a[n] > maxi
         then
             maxi := a[n];

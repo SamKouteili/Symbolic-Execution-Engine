@@ -3,7 +3,7 @@ program swap(x y)
 is
     z := 5;
     while z > 0 do
-        x, y := x, y;
+        x, y := y, x+1;
         z := z - 1;
     end
     assert x != y;

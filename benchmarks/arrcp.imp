@@ -1,0 +1,10 @@
+program arrcp(a b n)
+    pre n > 0
+is
+    tmp := n;
+    while n > 0 do
+        a[n] := b[n];
+        n := n - 1;
+    end
+    assert forall i, (0 <= i && i < tmp) ==> a[i] == b[i];
+end

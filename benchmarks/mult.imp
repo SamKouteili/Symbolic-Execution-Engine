@@ -1,0 +1,10 @@
+program mult(x y)
+    pre x > 4 * y + 1
+is
+    z := 3
+    while z > 0 do
+        y := y * 2;
+        z := z - 1
+    end
+    assert x > y;
+end

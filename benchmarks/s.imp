@@ -1,0 +1,6 @@
+program s(x y)
+    pre x > 0
+is
+    x, y := y, x;
+    assert x > y;
+end
