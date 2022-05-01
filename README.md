@@ -1,5 +1,6 @@
 # Symbolic Execution Engine
 CPSC 554 - Spring 2022
+
 *Author: Sam Kouteili, Nhi Nguyen*
 
 ## Part 1: How to run see
