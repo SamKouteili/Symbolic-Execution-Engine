@@ -90,10 +90,11 @@ language2cmd = {
         lambda _, nodes: Or(nodes[0], nodes[2]),
         lambda _, nodes: And(nodes[0], nodes[2]),
         lambda _, nodes: Implies(nodes[0], nodes[2]),
-        lambda _, nodes: ForAll([get_variable(x) for x in nodes[1]], nodes[3]),
-        lambda _, nodes: Exists([get_variable(x) for x in nodes[1]], nodes[3]),
+        lambda _, nodes: ForAll(nodes[1], nodes[3]),
+        lambda _, nodes: Exists(nodes[1], nodes[3]),
         lambda _, nodes: (nodes[1])
     ],
+    "QVAR": lambda _, nodes: get_variable(nodes[0], inc=True),
     "STMT" : [
         lambda _, nodes: [Assign(get_variable(nodes[0], inc=True) == nodes[2])],
         lambda _, nodes: [Assign(get_variable(nodes[0], inc=True) == nodes[4]), Assign(get_variable(nodes[2], inc=True) == nodes[6])],

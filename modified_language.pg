@@ -17,9 +17,11 @@ ASSN : COMP
     | ASSN "||" ASSN {left, 4}
     | ASSN "&&" ASSN {left, 5}
     | ASSN "==>" ASSN {left, 3}
-    | "forall" X* "," ASSN {2}
-    | "exists" X* "," ASSN {1}
+    | "forall" QVAR* "," ASSN {2}
+    | "exists" QVAR* "," ASSN {1}
     | "(" ASSN ")" {7};
+
+QVAR : X ;
 
 BEXP : COMP
     | "!" BEXP {3}
