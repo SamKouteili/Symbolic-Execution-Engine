@@ -1,13 +1,8 @@
-from z3 import IntVal, Int, IntSort, Array, Store, Not, Or, And, Implies, ForAll, Exists, substitute
+from matplotlib.pyplot import get
+from z3 import IntVal, Int, IntSort, Array, Store, Not, Or, And, Implies, ForAll, Exists
 from cmd import Assume, Assert, Fork, Assign
 
-def unravel_while_loop(bexp, block, lim):
-    if lim == 0:
-        return [Assume(Not(bexp))]
-    return [Fork(
-                [Assume(bexp)] + block + unravel_while_loop(bexp, block, lim-1),
-                [Assume(Not(bexp))]
-            )]
+# Array variables
 
 def get_array(arr):
     return Array(str(arr),IntSort(),IntSort())
@@ -22,7 +17,9 @@ def get_array_assign(nodes):
     exp = nodes[5]
     old_x = get_array(get_variable(x))
     new_x = get_array(get_variable(x, inc=True))
-    return Assign(new_x == Store(old_x, ind, exp))
+    return Assign(new_x == Store(old_x, ind, exp), new_x)
+
+# Get new and/or existing variable
 
 VARS = {}
 
@@ -32,27 +29,66 @@ def get_variable(var, inc=False):
             VARS[var] = 0
         else:
             VARS[var] += 1
-    return Int(f"{var}_{VARS[var]}")
+    return Int(f"{var}.{VARS[var]}")
 
-# def assign(var, exp):
-#     global TMP_COUNTER
-#     TMP_COUNTER += 1
-#     if var.num_args() == 2:
-#         arr = var.arg(0)
-#         ind = var.arg(1)
-#         tmp_arr = Array(f"_tmp_{arr}{TMP_COUNTER}",IntSort(),IntSort())
-#         tmp_ind = substitute(ind, (arr, tmp_arr))
-#         tmp_exp = substitute(exp, (arr, tmp_arr))
-#         return [Assume(tmp_arr == arr), 
-#                 Havoc(arr, isarr=True), 
-#                 Assume(arr == Store(tmp_arr, tmp_ind, tmp_exp))]
-#     else:
-#         tmp = Int(f"_tmp_{var}{TMP_COUNTER}")
-#         return [Assume(tmp == var), 
-#                 Havoc(var), 
-#                 Assume(var == substitute(exp, (var, tmp)))]
+# Balance variables index when entering fork
 
+def get_assigned_vars(block):
+    if len(block) == 0:
+        return []
+    hd = block[0]
+    if isinstance(hd, Assign):
+        return [hd.new_var] + get_assigned_vars(block[1:])
+    elif isinstance(hd, Fork):
+        return get_assigned_vars(hd.cmd1) + get_assigned_vars(block[1:])
+    return []
 
+def get_first_last_assigned(block):
+    assigned_vars = get_assigned_vars(block)
+    first_assigned = {}
+    last_assigned = {}
+    for var in assigned_vars:
+        name, ind = str(var).split(".")
+        ind = int(ind)
+        if name not in first_assigned or first_assigned[name] > ind:
+            first_assigned[name] = ind
+        if name not in last_assigned or last_assigned[name] < ind:
+            last_assigned[name] = ind
+    return first_assigned, last_assigned
+
+def balance_assigned_vars(block1, block2):
+    first_assigned1, last_assigned1 = get_first_last_assigned(block1)
+    first_assigned2, last_assigned2 = get_first_last_assigned(block2)
+    add1 = []
+    add2 = []
+    for name in last_assigned1:
+        if name not in last_assigned2:
+            before_fork = Int(f"{name}.{first_assigned1[name]-1}")
+            after_fork = Int(f"{name}.{last_assigned1[name]}")
+            add2.append(Assume(before_fork == after_fork))
+        elif last_assigned2[name] < last_assigned1[name]:
+            in_fork2 = Int(f"{name}.{last_assigned2[name]}")
+            in_fork1 = Int(f"{name}.{last_assigned1[name]}")
+            add2.append(Assume(in_fork2 == in_fork1))
+    for name in last_assigned2:
+        if name not in last_assigned1:
+            before_fork = Int(f"{name}.{first_assigned2[name]-1}")
+            after_fork = Int(f"{name}.{last_assigned2[name]}")
+            add1.append(Assume(before_fork == after_fork))
+        elif last_assigned1[name] < last_assigned2[name]:
+            in_fork1 = Int(f"{name}.{last_assigned1[name]}")
+            in_fork2 = Int(f"{name}.{last_assigned2[name]}")
+            add1.append(Assume(in_fork1 == in_fork2))
+    return block1 + add1, block2 + add2
+
+def create_fork(nodes, els):
+    block1 = nodes[3]
+    block2 = nodes[5] if els else []
+    block1, block2 = balance_assigned_vars(block1, block2)
+    return [Fork(
+                [Assume(nodes[1])] + block1,
+                [Assume(Not(nodes[1]))] + block2
+            )]
 
 language2cmd = {
     "N": lambda _, n: IntVal(n),
@@ -96,17 +132,11 @@ language2cmd = {
     ],
     "QVAR": lambda _, nodes: get_variable(nodes[0], inc=True),
     "STMT" : [
-        lambda _, nodes: [Assign(get_variable(nodes[0], inc=True) == nodes[2])],
-        lambda _, nodes: [Assign(get_variable(nodes[0], inc=True) == nodes[4]), Assign(get_variable(nodes[2], inc=True) == nodes[6])],
-        lambda _, nodes: [get_array_assign(nodes)], #TODO
-        lambda _, nodes: [Fork(
-                            [Assume(nodes[1])] + nodes[3],
-                            [Assume(Not(nodes[1]))] + nodes[5]
-                        )],
-        lambda _, nodes: [Fork(
-                            [Assume(nodes[1])] + nodes[3],
-                            [Assume(Not(nodes[1]))]
-                        )],
+        lambda _, nodes: [Assign(get_variable(nodes[0], inc=True) == nodes[2], get_variable(nodes[0]))],
+        lambda _, nodes: [Assign(get_variable(nodes[0], inc=True) == nodes[4], get_variable(nodes[0])), Assign(get_variable(nodes[2], inc=True) == nodes[6], get_variable(nodes[2]))],
+        lambda _, nodes: [get_array_assign(nodes)],
+        lambda _, nodes: create_fork(nodes, els=True),
+        lambda _, nodes: create_fork(nodes, els=False),
         lambda _, nodes: [Assume(nodes[1])],
         lambda _, nodes: [Assert(nodes[1])]
     ],

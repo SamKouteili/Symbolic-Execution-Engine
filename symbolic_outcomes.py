@@ -1,6 +1,6 @@
 from ftplib import error_reply
-from z3 import Implies, And, Not
-from cmd import Assume, Assert, Fork, Assign, DAssign
+from z3 import And, Not
+from cmd import Assume, Assert, Fork, Assign
 
 def symbolic_outcomes(blk, C, P):
     if len(blk) == 0 :
@@ -8,7 +8,7 @@ def symbolic_outcomes(blk, C, P):
     else :
         hd = blk[0]
         if (isinstance(hd, Fork)) :
-            symbOuts = symbolic_outcomes(hd.cmd1, C, P) + symbolic_outcomes(hd.cmd2, C, P)
+            symbOuts = symbolic_outcomes(hd.cmd2, C, P) + symbolic_outcomes(hd.cmd1, C, P)
             accOuts = []
             for outC, outP in symbOuts:
                 accOuts += symbolic_outcomes(blk[1:], outC, outP)
