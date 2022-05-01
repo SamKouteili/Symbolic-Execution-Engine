@@ -8,24 +8,26 @@ import argparse
 def print_title(name):
     print(f"\n{'#'*20}\n {name}\n{'#'*20}")
 
-def see(progname, symbOuts) :
+def see(progname, progvars, symbOuts) :
     noViolations = True
     for symbOut in symbOuts :
         s = Tactic('smt').solver()
         s.add(symbOut)
         if s.check() == sat :
             noViolations = False
-            print_true_vars(progname, s.model()) # double check
+            print_true_vars(progname, progvars, s.model()) # double check
             # break # needs to break out of inner for-loop
     
     if noViolations :
         print("No Violations Found")
 
-def print_true_vars(progname, m) :
+def print_true_vars(progname, progvars, m) :
     acc = []
-    for d in m.decls():
-        if d.name()[-2:] == "_0" :
-            acc.append(m[d])
+    for var in progvars:
+        for d in m.decls():
+            if d.name() == str(var):
+                acc.append(m[d])
+                break
     print(progname, join_unchange(acc))
 
 if __name__ == "__main__":
@@ -72,4 +74,4 @@ if __name__ == "__main__":
             print(f"Outcome {i+1}")
             print(f"{symbOut}\n")
 
-    see(progname, symbOuts)
+    see(progname, progvars, symbOuts)
