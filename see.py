@@ -2,7 +2,7 @@ from parglare import Parser, Grammar
 from language2cmd import language2cmd
 from while2if import create_while2if, join_unchange
 from symbolic_outcomes import symbolic_outcomes
-from z3 import Tactic, And, Not, sat
+from z3 import Tactic, And, Not, sat, Int
 import argparse
 
 def print_title(name):
@@ -22,13 +22,12 @@ def see(progname, progvars, symbOuts) :
         print("No Violations Found")
 
 def print_true_vars(progname, progvars, m) :
-    acc = []
-    for var in progvars:
-        for d in m.decls():
-            if d.name() == str(var):
-                acc.append(m[d])
-                break
-    print(progname, join_unchange(acc))
+    varsdict = {}
+    varnames = set([str(var) for var in progvars])
+    for d in m.decls():
+        if d.name() in varnames:
+            varsdict[d.name()] = m[d]
+    print(progname, join_unchange([varsdict[v] for v in varnames]))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
