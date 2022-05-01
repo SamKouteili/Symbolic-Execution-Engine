@@ -1,0 +1,49 @@
+PROG : "program" X "(" VAR* ")" ("pre" ASSN)* "is" BLOCK "end";
+
+VAR : X | X "[]";
+
+BLOCK : STMT*;
+
+STMT : X ":=" AEXP ";"
+    | X "," X ":=" AEXP "," AEXP ";" 
+    | X "[" AEXP "]" ":=" AEXP ";"
+    | "if" BEXP "then" BLOCK "else" BLOCK "end"
+    | "if" BEXP "then" BLOCK "end"
+    | "assume" ASSN ";"
+    | "assert" ASSN ";";
+
+ASSN : COMP
+    | "!" ASSN {6}
+    | ASSN "||" ASSN {left, 4}
+    | ASSN "&&" ASSN {left, 5}
+    | ASSN "==>" ASSN {left, 3}
+    | "forall" X* "," ASSN {2}
+    | "exists" X* "," ASSN {1}
+    | "(" ASSN ")" {7};
+
+BEXP : COMP
+    | "!" BEXP {3}
+    | BEXP "||" BEXP {left, 1}
+    | BEXP "&&" BEXP {left, 2}
+    | "(" BEXP ")" {4};
+
+COMP : AEXP "=" AEXP
+    | AEXP "!=" AEXP
+    | AEXP "<=" AEXP
+    | AEXP ">=" AEXP
+    | AEXP "<" AEXP
+    | AEXP ">" AEXP;
+
+AEXP: N | X
+    | X "[" AEXP "]"
+    | "-" AEXP {1}
+    | AEXP "+" AEXP {left, 1}
+    | AEXP "-" AEXP {left, 1}
+    | AEXP "*" AEXP {left, 2}
+    | AEXP "/" AEXP {left, 2}
+    | AEXP "%" AEXP {left, 2}
+    | "(" AEXP ")" {3};
+
+terminals
+N : /\d+(\.\d+)?/;
+X : /[a-zA-Z][_a-zA-Z0-9]*/;

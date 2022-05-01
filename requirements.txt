@@ -1,0 +1,4 @@
+# BNF parser
+parglare==0.15.0
+# SMT solver
+z3-solver==4.8.14.0

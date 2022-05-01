@@ -1,0 +1,8 @@
+program simple(x y)
+    pre x > 0
+is
+    while x > y do
+        x := x - 1;
+    end
+    assert x != y;
+end
