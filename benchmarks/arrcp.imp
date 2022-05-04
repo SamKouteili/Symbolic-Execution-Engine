@@ -1,4 +1,4 @@
-program arrcp(a b n)
+program arrcp(a[] b[] n)
     pre n > 0
 is
     tmp := n;
