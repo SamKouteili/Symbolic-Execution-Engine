@@ -1,0 +1,2 @@
+max Store(K(Int, 0), -38, 7720) 1
+max Store(K(Int, 40), 1, 39) 1

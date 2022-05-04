@@ -1,5 +1,5 @@
 program max(a n)
-    pre n > 0
+    pre n > 0 
 is
     maxi := 0;
     while n > 0 do

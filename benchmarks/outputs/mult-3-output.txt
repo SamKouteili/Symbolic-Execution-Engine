@@ -1,0 +1,2 @@
+mult 6 1 
+# same case for any value greater than or equal to 3

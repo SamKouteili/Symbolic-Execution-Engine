@@ -1,0 +1,1 @@
+arrcp Store(K(Int, 8), 0, 7) Store(Store(K(Int, 2), 1, 3), 0, 6) 1

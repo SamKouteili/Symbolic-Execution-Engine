@@ -1,4 +1,4 @@
-program binary_search(a n)
+program binary_search(a value n)
    pre n >= 0
    pre forall j k, (0 <= j && j < k && k < n) ==> a[j] <= a[k]
 is
@@ -20,5 +20,5 @@ is
    end
    idx := -1;
    assert (0 <= idx && idx < n) ==> a[idx] = value;
-   assert 0 > idx ==> forall k, (0 <= k && k < n) ==> a[k] != value
+   assert 0 > idx ==> forall k, (0 <= k && k < n) ==> a[k] != value;
 end

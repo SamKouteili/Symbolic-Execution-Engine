@@ -1,7 +1,7 @@
 # Symbolic Execution Engine
 CPSC 554 - Spring 2022
 
-*Author: Sam Kouteili, Nhi Nguyen*
+*Authors: Sam Kouteili, Nhi Nguyen*
 
 ## Part 1: How to run see
 
@@ -14,3 +14,5 @@ CPSC 554 - Spring 2022
 `python see.py [file_name.imp] [lim] [--debug]`
 
 ## Part 2: Benchmarks
+
+Unique benchmarks presented in .benchmarks directory. Expected outputs presented in .benchmarks/outputs folder - outputs do not necessarily have to exactly adhere to the ones presented.

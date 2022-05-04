@@ -1,7 +1,7 @@
 program swap(x y)
     pre x >= 0
 is
-    z := 5;
+    z := 3;
     while z > 0 do
         x, y := y, x+1;
         z := z - 1;

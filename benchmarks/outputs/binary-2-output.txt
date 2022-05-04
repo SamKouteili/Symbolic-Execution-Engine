@@ -1,0 +1,19 @@
+binary.imp 2
+binary_search Lambda(k!0,
+       If(And(1 <= k!0, 2 <= k!0, 3 <= k!0, Not(5 <= k!0)),
+          7720,
+          If(And(1 <= k!0, 2 <= k!0, Not(3 <= k!0)),
+             7719,
+             If(And(1 <= k!0, 2 <= k!0, 3 <= k!0, 5 <= k!0),
+                10157,
+                If(And(1 <= k!0, Not(2 <= k!0)), 7718, 24))))) 7719 6
+binary_search Lambda(k!0,
+       If(And(1 <= k!0, 2 <= k!0),
+          2437,
+          If(And(1 <= k!0, Not(2 <= k!0)), 2436, 14))) 2437 3
+binary_search Lambda(k!0,
+       If(And(1 <= k!0, 2 <= k!0, 3 <= k!0),
+          2435,
+          If(And(1 <= k!0, 2 <= k!0, Not(3 <= k!0)),
+             2437,
+             If(And(1 <= k!0, Not(2 <= k!0)), 2436, 20)))) 2437 3
