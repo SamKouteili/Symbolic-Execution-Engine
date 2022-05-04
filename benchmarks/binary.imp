@@ -1,4 +1,4 @@
-program binary_search(a value n)
+program binary_search(a[] value n)
    pre n >= 0
    pre forall j k, (0 <= j && j < k && k < n) ==> a[j] <= a[k]
 is
