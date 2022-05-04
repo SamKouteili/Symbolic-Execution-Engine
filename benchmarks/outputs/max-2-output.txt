@@ -1,2 +1,6 @@
-max Store(K(Int, 0), -38, 7720) 1
-max Store(K(Int, 40), 1, 39) 1
+max Store(K(Int, 0), -7719, 1237) 1
+max Store(Store(K(Int, 1237), 2, 0), 1, -38) 2
+max Store(Store(K(Int, 0), 1, 1237), -7719, 1238) 2
+max Store(K(Int, 7720), 0, 1237) 1
+max Store(Store(K(Int, 7720), 1, 0), -38, 7721) 2
+max Store(Store(K(Int, 39), 0, 41), 1, 40) 2
