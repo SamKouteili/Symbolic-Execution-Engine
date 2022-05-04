@@ -1,4 +1,3 @@
-binary.imp 2
 binary_search Lambda(k!0,
        If(And(1 <= k!0, 2 <= k!0, 3 <= k!0, Not(5 <= k!0)),
           7720,
